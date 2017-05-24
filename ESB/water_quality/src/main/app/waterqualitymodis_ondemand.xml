@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:quartz="http://www.mulesoft.org/schema/mule/quartz" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/quartz http://www.mulesoft.org/schema/mule/quartz/current/mule-quartz.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
+    <flow name="wqmodisOndemandFlow" doc:description="http://&lt;host&gt;:9190/rangeDailyProducts
+
+{
+    &quot;startDate&quot;: &quot;2016-08-10&quot;,
+    &quot;endDate&quot;:  &quot;2016-08-25&quot;             
+}">
+        <http:listener config-ref="HTTP_Listener_WQ" path="/rangeDailyProducts" doc:name="HTTP" doc:description="http://127.0.0.1:9190/ondemand
+
+{
+    &quot;startDate&quot;: &quot;2016-08-24&quot;,
+    &quot;endDate&quot;:  &quot;2016-08-25&quot;             
+}"/>
+        <set-variable variableName="inputPayload" value="#[payload]" doc:name="save inputPayload"/>
+        <set-variable variableName="gte" value="#[json:startDate]" doc:name="gte"/>
+        <set-variable variableName="lte" value="#[json:endDate]" doc:name="lte"/>
+        <expression-component doc:name="Expression"><![CDATA[lte=new org.mule.el.datetime.DateTime(lte);]]></expression-component>
+        <set-variable variableName="curDate" value="#[new org.mule.el.datetime.DateTime(gte);]" doc:name="curDate"/>
+        <logger message="#[lte]" level="INFO" doc:name="Logger"/>
+        <async doc:name="Async">
+            <flow-ref name="saimon_ondemand_productFlow" doc:name="saimon_ondemand_productFlow"/>
+	    </async>    
+        <catch-exception-strategy doc:name="Catch Exception Strategy">
+            <object-to-string-transformer doc:name="Object to String"/>
+            <logger message="Error wqmodisScheduler: #[payload]" level="INFO" doc:name="Error wqmodis Scheduler"/>
+        </catch-exception-strategy>
+    </flow>
+    <flow name="saimon_ondemand_productFlow" doc:description="http://&lt;host&gt;:9190/ondemand
+
+{
+    &quot;startDate&quot;: &quot;2016-08-24&quot;,
+    &quot;endDate&quot;:  &quot;2016-08-25&quot;             
+}">
+        <choice doc:name="Choice">
+            <when expression="curDate.isBefore(lte)">
+                <set-variable variableName="dayToProcess" value="#[curDate.format(&quot;yyyy-MM-dd&quot;)]" doc:name="dayToProcess"/>
+                <logger message="dayToProcess is : #[dayToProcess]" level="INFO" doc:name="Logger"/>
+                <set-payload value="{&quot;processDefinitionKey&quot;:&quot;${activiti.wqm.procdefkey}&quot;,&quot;variables&quot;:[{&quot;name&quot;:&quot;${activiti.wqm.startdatekey}&quot;,&quot;type&quot;:&quot;date&quot;,&quot;value&quot;:&quot;#[dayToProcess]T00:00:00Z&quot;},{&quot;name&quot;:&quot;${activiti.wqm.enddatekey}&quot;,&quot;type&quot;:&quot;date&quot;,&quot;value&quot;:&quot;#[dayToProcess]T23:59:59Z&quot;}]}" doc:name="Create Activity start wf request"/>
+                <object-to-string-transformer doc:name="Object to String"/>
+                <logger message="Request to activiti: #[payload]" level="INFO" doc:name="Request to activiti"/>
+                <http:request config-ref="HTTP_Request_Activiti" path="runtime/process-instances" method="POST" doc:name="Start Activity WQModis WF">
+                    <http:request-builder>
+                        <http:header headerName="Content-Type" value="application/json"/>
+                    </http:request-builder>
+                </http:request>
+                <object-to-string-transformer doc:name="Object to String"/>
+                <json:object-to-json-transformer doc:name="Object to JSON"/>
+                <logger message="Activiti resp: #[payload] " level="INFO" doc:name="Activiti resp"/>
+                <set-variable variableName="idPolling" value="#[json:id]" doc:name="idPolling"/>
+                <logger message="call polling:  ${activiti.host}:${activiti.port}${activiti.path}runtime/executions/#[idPolling]" level="INFO" doc:name="wait"/>
+                <until-successful maxRetries="15" millisBetweenRetries="30000" synchronous="true" doc:name="Until Successful">
+                    <http:request config-ref="HTTP_Request_Activiti" path="runtime/executions/#[idPolling]" method="GET" doc:name="Polling Status">
+                        <http:success-status-code-validator values="404"/>
+                    </http:request>
+                </until-successful>
+                <expression-component doc:name="Add one day to curDate "><![CDATA[curDate=curDate.plusDays(1);]]></expression-component>
+                <flow-ref name="saimon_ondemand_productFlow" doc:name="saimon_ondemand_productFlow"/>
+            </when>
+            <otherwise>
+                <logger message="END" level="INFO" doc:name="END"/>
+            </otherwise>
+        </choice>
+    </flow>
+</mule>
