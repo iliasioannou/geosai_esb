@@ -1,3 +1,4 @@
 #! /bin/bash
 
-docker build --no-cache -t planetek/cmems_processors:$1 --build-arg branch=$1 .
+docker build -t planetek/ubuntu-maven-git:base -f Dockerfile.base .
+docker build -t planetek/cmems_esb:$1 --build-arg branch=$1 .

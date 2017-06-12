@@ -1,8 +1,15 @@
-FROM planetek/cmems_processors:base
+FROM planetek/ubuntu-maven-git:base
 
 ARG branch
 
-RUN git clone -b $branch https://teamEreticoTfs:vAsK*AIJFB@tfs.planetek.it/SBU-GS/pkz029_UU_CMEMS/_git/pkz029_UU_CMEMS_Processori /src
+WORKDIR /
+RUN git clone -b $branch https://teamEreticoTfs:vAsK*AIJFB@tfs.planetek.it/SBU-GS/pkz029_UU_CMEMS/_git/pkz029_UU_CMEMS_ESB /src
 
-WORKDIR /src/Processors/server
-CMD ["/home/anaconda/bin/python2.7","wq_server.py"]
+WORKDIR src/ESB/water_quality
+RUN mvn clean install
+WORKDIR target
+RUN rm -r */
+RUN cp water_quality-1.0.0-SNAPSHOT.zip /opt/mule-standalone/apps
+
+WORKDIR /opt/mule-standalone/bin
+CMD ["./mule"]
