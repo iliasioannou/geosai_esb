@@ -38,7 +38,7 @@ import xmlrpclib
 wqProps = muleContext.getRegistry().get("wqProps")
 
 #xmlrpcServer = "http://"+wqProps["wqmodis.host"]+":"+wqProps["wqmodis.port"]
-xmlrpcServer = "http://localhost:9091"
+xmlrpcServer = "http://cmems_processors:9091"
 moduleName = wqProps["wqmodis.module"]
 scriptName = wqProps["wqmodis.process"]
 
@@ -130,6 +130,7 @@ payload.put("vars", vars);
     </flow>
     <flow name="wqmodisLoaderFlow" processingStrategy="synchronous">
         <logger message="wqModisOutPath: #[wqModisOutPath]" level="INFO" doc:name="wqModisOutPath"/>
+        <logger message="#[app.registry.wqProps[&quot;wq.share.basepath&quot;] + wqModisOutPath]" level="INFO" doc:name="Logger"/>
         <set-variable variableName="wqModisOutLocalDir" value="#[app.registry.wqProps[&quot;wq.share.basepath&quot;] + wqModisOutPath]" doc:name="wqModisOutLocalDir"/>
         <scripting:component doc:name="List files in wqModisOutLocalDir">
             <scripting:script engine="jython"><![CDATA[import os
@@ -138,7 +139,7 @@ result = os.listdir(wqModisOutLocalDir)]]></scripting:script>
         <foreach doc:name="For Each">
                 	<set-variable variableName="fileName" value="#[payload]" doc:name="fileName"/>
             <set-variable variableName="noextFileName" value="#[fileName.substring( 0, fileName.lastIndexOf(&quot;.&quot;) )]" doc:name="noextFileName"/>
-            <set-variable variableName="coverageName" value="#[noextFileName.split(&quot;_&quot;)[0].toUpperCase() + &quot;_&quot; + noextFileName.split(&quot;_&quot;)[1].toUpperCase()+&quot;_&quot;+noextFileName.split(&quot;_&quot;)[5].toUpperCase()]" doc:name="coverageName"/>
+            <set-variable variableName="coverageName" value="#[noextFileName.split(&quot;_&quot;)[0].toUpperCase() + &quot;_&quot; + noextFileName.split(&quot;_&quot;)[1].toUpperCase()+&quot;_&quot;+noextFileName.split(&quot;_&quot;)[3].toUpperCase()]" doc:name="coverageName"/>
             <set-variable variableName="workspaceName" value="${geoserver.workspace}" doc:name="workspaceName"/>
             <logger message="wqmodisCreateDownload for #[fileName]" level="INFO" doc:name="wqmodisCreateDownload "/>
             <set-variable variableName="wqModisOutLocalFullPath" value="#[wqModisOutLocalDir+fileName ]" doc:name="wqModisOutLocalFullPath"/>
@@ -165,15 +166,15 @@ return payload;
             
             
              <logger message="Prepare metadata for Geonetwork for #[fileName]" level="INFO" doc:name="Prepare metadata for Geonetwork"/>
-            <set-variable variableName="Prod_Type" value="#[new org.mule.module.json.JsonData('${wqmodis.prodtype}').get(noextFileName.split(&quot;_&quot;)[6]).toString()]" doc:name="Prod_Type"/>
-            <set-variable variableName="Par_Type" value="#[new org.mule.module.json.JsonData('${wqmodis.partype}').get(noextFileName.split(&quot;_&quot;)[5]).asText()]" doc:name="Par_Type"/>
+            <set-variable variableName="Prod_Type" value="#[new org.mule.module.json.JsonData('${wqmodis.prodtype}').get(noextFileName.split(&quot;_&quot;)[4]).toString()]" doc:name="Prod_Type"/>
+            <set-variable variableName="Par_Type" value="#[new org.mule.module.json.JsonData('${wqmodis.partype}').get(noextFileName.split(&quot;_&quot;)[3]).asText()]" doc:name="Par_Type"/>
             <set-variable variableName="Res" value="#[Prod_Type.contains(&quot;Improved&quot;) ? &quot;&amp;lt;100m&quot; : &quot;1km&quot;]" doc:name="Res"/>
             <set-variable variableName="Res_Denominator" value="#[Prod_Type.contains(&quot;Improved&quot;) ? 1000000 : 10000000]" doc:name="Res_Denominator"/>
 
             <set-variable variableName="Processing_Type" value="pkz029_CMEMS" doc:name="Processing_Type"/>
             <set-variable variableName="Publication_Date" value="#[ new java.text.SimpleDateFormat(&quot;yyyy-MM-dd'T'HH:mm:ss&quot;).format(new java.util.Date())]" doc:name="Publication_Date"/>
             <set-variable variableName="Creation_Date" value="#[Publication_Date]" doc:name="Creation_Date"/>
-            <set-variable variableName="Temporal_Extent" value="#[new org.mule.el.datetime.DateTime(noextFileName.split(&quot;_&quot;)[2]+noextFileName.split(&quot;_&quot;)[3]+noextFileName.split(&quot;_&quot;)[4], &quot;yyyyMMdd&quot;).format(&quot;yyyy-MM-dd'T'HH:mm:ss&quot;) ]" doc:name="Temporal_Extent"/>
+            <set-variable variableName="Temporal_Extent" value="#[new org.mule.el.datetime.DateTime(noextFileName.split(&quot;_&quot;)[2], &quot;yyyyMMdd&quot;).format(&quot;yyyy-MM-dd'T'HH:mm:ss&quot;) ]" doc:name="Temporal_Extent"/>
             <logger message="Temp_Extent: #[Temporal_Extent] from #[noextFileName.split(&quot;_&quot;)[0]]" level="INFO" doc:name="Temp_Extent"/>
             <set-variable variableName="geoserverPublic" value="${geoserver.public}" doc:name="geoserverPublic"/>
             <logger message="workspaces/#[workspaceName]/coveragestores/#[coverageName]/coverages/#[coverageName].json" level="INFO" doc:name="Copy_of_Call geonetwork flow"/>
