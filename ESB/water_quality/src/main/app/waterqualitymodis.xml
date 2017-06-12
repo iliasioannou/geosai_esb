@@ -147,7 +147,7 @@ result = os.listdir(wqModisOutLocalDir)]]></scripting:script>
             <set-variable variableName="Prod_Download" value="#[payload]" doc:name="Prod_Download"/>
             <logger message="Download Url: #[Prod_Download]" level="INFO" doc:name="Download Url"/>
             <choice doc:name="Numeric?">
-                <when expression="#[noextFileName.split(&quot;_&quot;)[6] == &quot;Num&quot;]">
+                <when expression="#[noextFileName.split(&quot;_&quot;)[4] == &quot;Num&quot;]">
                     <logger message="Load file in Geoserver: #[fileName]" level="INFO" doc:name="Load file in Geoserver"/>
                     <expression-component doc:name="Set payload geoserverReq HashMap"><![CDATA[payload = new java.util.HashMap();
 payload.put("coveragestoreName", coverageName );
