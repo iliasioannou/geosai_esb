@@ -1,0 +1,8 @@
+FROM goyalzz/ubuntu-java-8-maven-docker-image:16.04
+
+RUN apt-get install git
+RUN apt-get install -y unzip
+WORKDIR /opt
+RUN wget -c https://repository-master.mulesoft.org/nexus/content/repositories/releases/org/mule/distributions/mule-standalone/3.8.1/mule-standalone-3.8.1.zip
+RUN unzip mule-standalone-3.8.1.zip
+RUN mv mule-standalone-3.8.1 mule-standalone
