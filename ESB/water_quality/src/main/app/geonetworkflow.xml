@@ -33,8 +33,6 @@ payload.put("category", flowVars.categoryid);
 payload.put("uuidAction","generateUUID");
 payload.put("styleSheet","");
 return payload;]]></expression-component>
-
-        <logger message="Request body: #[payload] to http://${geonetwork.host}:${geonetwork.port}/${geonetwork.basepath}md.insert" level="INFO" doc:name="Request body"/>
         <message-properties-transformer doc:name="Add Content-Type Header" >
             <add-message-property key="content-type" value="application/x-www-form-urlencoded"/>
         </message-properties-transformer>
