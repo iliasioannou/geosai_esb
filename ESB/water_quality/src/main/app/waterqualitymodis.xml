@@ -37,12 +37,7 @@ import xmlrpclib
 
 wqProps = muleContext.getRegistry().get("wqProps")
 
-#xmlrpcServer = "http://"+wqProps["wqmodis.host"]+":"+wqProps["wqmodis.port"]
-xmlrpcServer = "http://cmems_processors:9091"
-moduleName = wqProps["wqmodis.module"]
-scriptName = wqProps["wqmodis.process"]
-
-print xmlrpcServer, moduleName, scriptName
+xmlrpcServer = "http://"+wqProps["wqmodis.host"]+":"+wqProps["wqmodis.port"]
 
 proxy = xmlrpclib.ServerProxy(xmlrpcServer)
 result = proxy.execute(payload)]]></scripting:script>
@@ -64,7 +59,7 @@ result = proxy.execute(payload)]]></scripting:script>
                   &quot;lte&quot;: &quot;Fri Jan 01 00:00:00 CET 2016&quot;
               }
 }">
-		<http:listener config-ref="HTTP_Listener_WQ" path="/wqmodis" doc:name="HTTP"/>
+		<http:listener config-ref="HTTP_Listener_WQ" path="/wqcmems" doc:name="HTTP"/>
         <object-to-string-transformer doc:name="Object to String"/>
         <json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to HashMap"/>
         <set-variable variableName="inputPayload" value="#[payload]" doc:name="save inputPayload"/>
