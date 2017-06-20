@@ -45,23 +45,17 @@ public class DownloadZipCreator  implements Callable
     	String SAIMON_Product_fileName = Paths.get(SAIMON_Product).getFileName().toString();
     	String SAIMON_Product_without_ext = SAIMON_Product_fileName.substring(0, SAIMON_Product_fileName.lastIndexOf('.'));
     	
-    	
-    	
-    	
-    	
-    	
-    	
-    	String SAIMON_Product_type = SAIMON_Product_without_ext.contains("Chl") ? "Chl" : (SAIMON_Product_without_ext.contains("SST") ? "SST" : "WT");
-    	String SAIMON_Legenda = "/legenda/Legend_"+SAIMON_Product_type+".png";
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
+    	String SAIMON_Legenda =  "/legendas/Legend_";
+    	if(SAIMON_Product_without_ext.contains("CHL")){
+    		SAIMON_Legenda += "Chl.png";
+    	}else if (SAIMON_Product_without_ext.contains("SST")) {
+    		SAIMON_Legenda += "SST.png";
+		}else if (SAIMON_Product_without_ext.contains("WT")) {
+			SAIMON_Legenda += "WT.png";
+		}else if (SAIMON_Product_without_ext.contains("TUR")) {
+			SAIMON_Legenda += "WT.png";
+		}
+  	
     	MD_ZipFileName = ZipFolder + SAIMON_Product_without_ext + ".zip"; 
     	
     	try {
