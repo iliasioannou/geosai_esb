@@ -52,7 +52,7 @@ public class DownloadZipCreator  implements Callable
     		SAIMON_Legenda += "SST.png";
 		}else if (SAIMON_Product_without_ext.contains("WT")) {
 			SAIMON_Legenda += "WT.png";
-		}else if (SAIMON_Product_without_ext.contains("TUR")) {
+		}else if (SAIMON_Product_without_ext.contains("Tur")) {
 			SAIMON_Legenda += "WT.png";
 		}
   	
