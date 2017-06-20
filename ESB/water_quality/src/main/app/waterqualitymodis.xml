@@ -137,7 +137,7 @@ result = os.listdir(wqModisOutLocalDir)]]></scripting:script>
             <set-variable variableName="coverageName" value="#[noextFileName.split(&quot;_&quot;)[0].toUpperCase() + &quot;_&quot; + noextFileName.split(&quot;_&quot;)[1].toUpperCase()+&quot;_&quot;+noextFileName.split(&quot;_&quot;)[3].toUpperCase()]" doc:name="coverageName"/>
             <set-variable variableName="workspaceName" value="${geoserver.workspace}" doc:name="workspaceName"/>
             <logger message="wqmodisCreateDownload for #[fileName]" level="INFO" doc:name="wqmodisCreateDownload "/>
-            <set-variable variableName="wqModisOutLocalFullPath" value="#[wqModisOutLocalDir+fileName ]" doc:name="wqModisOutLocalFullPath"/>
+            <set-variable variableName="wqModisOutLocalFullPath" value="#[wqModisOutLocalDir + fileName]" doc:name="wqModisOutLocalFullPath"/>
             <component class="it.planetek.saimon.zip.DownloadZipCreator" doc:name="DownloadZipCreator"/>
             <set-variable variableName="Prod_Download" value="#[payload]" doc:name="Prod_Download"/>
             <logger message="Download Url: #[Prod_Download]" level="INFO" doc:name="Download Url"/>
