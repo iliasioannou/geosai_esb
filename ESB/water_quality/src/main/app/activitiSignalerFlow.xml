@@ -39,6 +39,7 @@ variables.add(thisVariable);
 ]]></expression-component>
         </foreach>
         <http:request config-ref="HTTP_Request_Activiti" path="runtime/executions/?signalEventSubscriptionName=#[payload.get(&quot;signalName&quot;)]&amp;processInstanceId=#[payload.get(&quot;executionId&quot;)]" method="GET" doc:name="Get Activiti SignalCatcher execId"/>
+        <logger message="#[payload]" level="INFO" doc:name="Copy_of_Activiti req"/>
         <set-variable variableName="signalExecId" value="#[json:data[0]/id]" doc:name="signalExecId"/>
         <set-payload value="#[activitiSignalBody]" doc:name="Set Payload to activitiSignalBody"/>
         <json:object-to-json-transformer doc:name="Object to JSON"/>
