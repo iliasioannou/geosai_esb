@@ -1,0 +1,5 @@
+FROM planetek/ubuntu-maven-git:base
+
+WORKDIR /opt/mule-standalone/bin
+COPY dev.sh /
+WORKDIR /
