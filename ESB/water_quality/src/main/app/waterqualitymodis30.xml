@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:json="http://www.mulesoft.org/schema/mule/json"
+<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:json="http://www.mulesoft.org/schema/mule/json"
 	xmlns:http="http://www.mulesoft.org/schema/mule/http"
 	xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
 	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
@@ -10,7 +10,8 @@
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
-http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
     <flow name="waterqualitymodis30Flow" doc:description="{
     &quot;executionId&quot;: 123456,
     &quot;signalName&quot;: &quot;test_signal&quot;,
@@ -18,26 +19,30 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
                   &quot;date&quot;: &quot;Wed Jul 01 00:00:00 CEST 2015&quot;
               }
 }">
-        <http:listener config-ref="HTTP_Listener_WQ" path="/wqm30" doc:name="HTTP"/>
+        <http:listener config-ref="HTTP_Listener_WQ" path="/wqcmems30" doc:name="HTTP"/>
         <object-to-string-transformer doc:name="Object to String"/>
         <json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to HashMap"/>
         <set-variable variableName="inputPayload" value="#[payload]" doc:name="save inputPayload"/>
         <logger message="WQModis30 Request received: #[payload]" level="INFO" doc:name="WQModis30 Request received"/>
-        <set-variable variableName="date" value="#[new java.text.SimpleDateFormat(&quot;EEE MMM dd kk:mm:ss z yyyy&quot;, java.util.Locale.ENGLISH).parse(payload.get(&quot;args&quot;).get(&quot;date&quot;))]" doc:name="date as Date"/>
+        <set-variable variableName="date" value="#[sdf = new java.text.SimpleDateFormat(&quot;EEE MMM dd kk:mm:ss z yyyy&quot;, java.util.Locale.ENGLISH); sdf.parse(payload.get(&quot;args&quot;).get(&quot;date&quot;))]" doc:name="date as Date"/>
+        <logger message="date: #[date]" level="INFO" doc:name="Copy_of_wqm30Map"/>
 
         <set-payload doc:name="Set Response" value="OK"/>
         <async doc:name="Async">
             <set-variable variableName="signalName" value="#[inputPayload.get(&quot;signalName&quot;)]" doc:name="signalName"/>
             <set-variable variableName="executionId" value="#[inputPayload.get(&quot;executionId&quot;)]" doc:name="executionId"/>
             <expression-component doc:name="Convert date format"><![CDATA[import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 SimpleDateFormat toFormat = new SimpleDateFormat("yyyy-MM-dd");
+toFormat.setTimeZone(TimeZone.getTimeZone("Europe/Rome"));
 
-date = toFormat.format(date);
-]]></expression-component>
+date = toFormat.format(date);]]></expression-component>
             <set-variable variableName="wqm30Map" value="#[new java.util.HashMap()]" doc:name="wqm30Map"/>
             <expression-component doc:name="Init wqm30Map"><![CDATA[wqm30Map.put("runDate", date);
-wqm30Map.put("procType", app.registry.wqProps["wqmodis30.proctype"]);]]></expression-component>
+wqm30Map.put("procType", "month");
+wqm30Map.put("products", app.registry.wqProps["wqcmems.month.procType"]);
+]]></expression-component>
 
                     <logger message="wqm30Map: #[wqm30Map]" level="INFO" doc:name="wqm30Map"/>
                     <set-payload value="#[wqm30Map]" doc:name="Set wqm30Map"/>
@@ -49,13 +54,9 @@ import xmlrpclib
 wqProps = muleContext.getRegistry().get("wqProps")
 
 xmlrpcServer = "http://"+wqProps["wqmodis.host"]+":"+wqProps["wqmodis.port"]
-moduleName = wqProps["wqmodis30.module"]
-scriptName = wqProps["wqmodis30.process"]
-
-print xmlrpcServer, moduleName, scriptName
 
 proxy = xmlrpclib.ServerProxy(xmlrpcServer)
-result = proxy.execute( moduleName, scriptName, payload)]]></scripting:script>
+result = proxy.execute(payload)]]></scripting:script>
                     </scripting:component>
             <logger message="Py res: #[payload]" level="INFO" doc:name="Py res"/>
             <set-variable variableName="wqm30ReturnCode" value="#[json:returnCode]" doc:name="wqm30ReturnCode"/>
@@ -106,7 +107,7 @@ payload.put("vars", vars);
     
     <flow name="wqm30LoaderFlow" processingStrategy="synchronous">
     	<logger message="wqm30OutPath: #[wqm30OutPath]" level="INFO" doc:name="wqm30OutPath"/>
-        <set-variable variableName="wqm30OutLocalDir" value="#[wqm30OutPath.replace(app.registry.wqProps[&quot;wq.share.basepath&quot;], &quot;${wq.share.mountpoint}&quot;).replace(&quot;\\&quot;,&quot;/&quot;)]" doc:name="wqm30OutLocalDir"/>
+        <set-variable variableName="wqm30OutLocalDir" value="#[app.registry.wqProps[&quot;wq.share.basepath&quot;] + wqm30OutPath]" doc:name="wqm30OutLocalDir"/>
         <scripting:component doc:name="List files in wqm30OutLocalDir">
             <scripting:script engine="jython"><![CDATA[import os
 result = os.listdir(wqm30OutLocalDir)]]></scripting:script>
@@ -114,7 +115,7 @@ result = os.listdir(wqm30OutLocalDir)]]></scripting:script>
         <foreach doc:name="For Each">
                 	<set-variable variableName="fileName" value="#[payload]" doc:name="fileName"/>
             <set-variable variableName="noextFileName" value="#[fileName.substring( 0, fileName.lastIndexOf(&quot;.&quot;) )]" doc:name="noextFileName"/>
-            <set-variable variableName="coverageName" value="#[noextFileName.split(&quot;_&quot;)[2].toUpperCase()+(noextFileName.contains(&quot;P90&quot;) ? &quot;30P&quot; : &quot;30&quot;)]" doc:name="coverageName"/>
+            <set-variable variableName="coverageName" value="#[noextFileName.split(&quot;_&quot;)[0].toUpperCase() + &quot;_&quot; + noextFileName.split(&quot;_&quot;)[1].toUpperCase()+&quot;_&quot;+noextFileName.split(&quot;_&quot;)[5].toUpperCase() +(noextFileName.contains(&quot;P90&quot;) ? &quot;30P&quot; : &quot;30&quot;)]" doc:name="coverageName"/>
             <set-variable variableName="workspaceName" value="${geoserver.workspace}" doc:name="workspaceName"/>
             <logger message="wqmodis30CreateDownload for #[fileName]" level="INFO" doc:name="wqmodis30CreateDownload "/>
             <set-variable variableName="wqModisOutLocalFullPath" value="#[wqm30OutLocalDir+fileName ]" doc:name="wqModisOutLocalFullPath"/>
@@ -122,7 +123,7 @@ result = os.listdir(wqm30OutLocalDir)]]></scripting:script>
             <set-variable variableName="Prod_Download" value="#[payload]" doc:name="Prod_Download"/>
             <logger message="Download Url: #[Prod_Download]" level="INFO" doc:name="Download Url"/>
             <choice doc:name="Numeric?">
-                <when expression="#[noextFileName.split(&quot;_&quot;)[4] == &quot;Num&quot;]">
+                <when expression="#[noextFileName.split(&quot;_&quot;)[noextFileName.split(&quot;_&quot;).size() -1] == &quot;Num&quot;]">
                     <logger message="Load file in Geoserver: #[fileName]" level="INFO" doc:name="Load file in Geoserver"/>
                     <expression-component doc:name="Set payload geoserverReq HashMap"><![CDATA[payload = new java.util.HashMap();
 payload.put("coveragestoreName", coverageName );
