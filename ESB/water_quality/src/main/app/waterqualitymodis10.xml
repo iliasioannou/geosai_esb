@@ -31,11 +31,12 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
             <set-variable variableName="signalName" value="#[inputPayload.get(&quot;signalName&quot;)]" doc:name="signalName"/>
             <set-variable variableName="executionId" value="#[inputPayload.get(&quot;executionId&quot;)]" doc:name="executionId"/>
             <expression-component doc:name="Convert date format"><![CDATA[import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 SimpleDateFormat toFormat = new SimpleDateFormat("yyyy-MM-dd");
+toFormat.setTimeZone(TimeZone.getTimeZone("Europe/Rome"));
 
-date = toFormat.format(date);
-]]></expression-component>
+date = toFormat.format(date);]]></expression-component>
             <set-variable variableName="wqm10Map" value="#[new java.util.HashMap()]" doc:name="wqm10Map"/>
             <expression-component doc:name="Init wqm10Map"><![CDATA[wqm10Map.put("runDate", date);
 wqm10Map.put("procType", "ten");
