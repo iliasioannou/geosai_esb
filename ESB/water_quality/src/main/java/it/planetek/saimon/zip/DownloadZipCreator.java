@@ -47,13 +47,13 @@ public class DownloadZipCreator  implements Callable
     	
     	String SAIMON_Legenda =  "/legenda/Legend_";
     	if(SAIMON_Product_without_ext.contains("Chl")){
-    		SAIMON_Legenda += "Chl.png";
+    		SAIMON_Legenda += "CHL.png";
     	}else if (SAIMON_Product_without_ext.contains("SST")) {
     		SAIMON_Legenda += "SST.png";
 		}else if (SAIMON_Product_without_ext.contains("WT")) {
 			SAIMON_Legenda += "WT.png";
 		}else if (SAIMON_Product_without_ext.contains("Tur")) {
-			SAIMON_Legenda += "WT.png";
+			SAIMON_Legenda += "TUR.png";
 		}
   	
     	MD_ZipFileName = ZipFolder + SAIMON_Product_without_ext + ".zip"; 
