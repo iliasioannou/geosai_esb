@@ -109,7 +109,7 @@ payload.put("vars", vars);
         <set-variable variableName="wqm10OutLocalDir" value="#[app.registry.wqProps[&quot;wq.share.basepath&quot;] + wqm10OutPath]" doc:name="wqm10OutLocalDir"/>
         <scripting:component doc:name="List files in wqm10OutLocalDir">
             <scripting:script engine="jython"><![CDATA[import os
-result = os.listdir(wqm10OutLocalDir)]]></scripting:script>
+result = filter(lambda item: '.tif' in item, os.listdir(wqm10OutLocalDir))]]></scripting:script>
         </scripting:component>
         <foreach doc:name="For Each">
                 	<set-variable variableName="fileName" value="#[payload]" doc:name="fileName"/>
