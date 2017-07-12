@@ -183,7 +183,6 @@ payload = new java.util.HashMap();
 payload.put("type", Processing_Type);
 payload.put("metadataXml", metadataXml);
 return payload;]]></expression-component>
-            <logger message="Call geonetwork flow #[payload]" level="INFO" doc:name="Call geonetwork flow"/>
             <flow-ref name="geonetworkFlow" doc:name="geonetworkFlow"/>
         </foreach>
     </flow>
