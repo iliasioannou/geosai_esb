@@ -114,7 +114,7 @@ result = filter(lambda item: '.tif' in item, os.listdir(wqm10OutLocalDir))]]></s
         <foreach doc:name="For Each">
                 	<set-variable variableName="fileName" value="#[payload]" doc:name="fileName"/>
             <set-variable variableName="noextFileName" value="#[fileName.substring( 0, fileName.lastIndexOf(&quot;.&quot;) )]" doc:name="noextFileName"/>
-            <set-variable variableName="coverageName" value="#[noextFileName.split(&quot;_&quot;)[0].toUpperCase() + &quot;_&quot; + noextFileName.split(&quot;_&quot;)[1].toUpperCase()+&quot;_&quot;+noextFileName.split(&quot;_&quot;)[5].toUpperCase()+&quot;10&quot;]" doc:name="coverageName"/>
+            <set-variable variableName="coverageName" value="#[noextFileName.split(&quot;_&quot;)[0].toUpperCase() + &quot;_&quot; + noextFileName.split(&quot;_&quot;)[1].toUpperCase()+&quot;_&quot;+noextFileName.split(&quot;_&quot;)[4].toUpperCase()+&quot;10&quot;]" doc:name="coverageName"/>
             <set-variable variableName="workspaceName" value="${geoserver.workspace}" doc:name="workspaceName"/>
             <logger message="wqmodis10CreateDownload for #[fileName]" level="INFO" doc:name="wqmodis10CreateDownload "/>
             <set-variable variableName="wqModisOutLocalFullPath" value="#[wqm10OutLocalDir+fileName ]" doc:name="wqModisOutLocalFullPath"/>
