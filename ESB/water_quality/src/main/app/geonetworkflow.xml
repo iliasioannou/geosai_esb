@@ -19,8 +19,8 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 
 - &quot;type&quot; is one of [alert, modis, modistwq, sen2, crowdsrc] (see group/category in properties file)
 - &quot;metadata&quot; is gmd metadata to insert in geonetwork" processingStrategy="synchronous">
-        <logger message="Started geonetwork flow #[payload]" level="INFO" doc:name="Started geonetwork flow"/>
-        <set-variable variableName="type" value="#[payload.get(&quot;type&quot;)]" doc:name="type"/>
+<!--         <logger message="Started geonetwork flow #[payload]" level="INFO" doc:name="Started geonetwork flow"/>
+ -->        <set-variable variableName="type" value="#[payload.get(&quot;type&quot;)]" doc:name="type"/>
         <logger message="Geonetw type: #[type]" level="INFO" doc:name="Logger"/>
         <set-variable variableName="metadataXml" value="#[payload.get(&quot;metadataXml&quot;)]" doc:name="metadataXml"/>
 
