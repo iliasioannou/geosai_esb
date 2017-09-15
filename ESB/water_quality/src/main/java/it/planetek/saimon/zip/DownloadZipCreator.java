@@ -41,6 +41,7 @@ public class DownloadZipCreator  implements Callable
     	String MD_ZipFileName="";
     	String ZipFolder = 	wqProps.getProperty("download.zipfolder");
     	String WebFolder = wqProps.getProperty("download.webURL");
+    	String tematic = "Thematic";
     	
     	String SAIMON_Product_fileName = Paths.get(SAIMON_Product).getFileName().toString();
     	String SAIMON_Product_without_ext = SAIMON_Product_fileName.substring(0, SAIMON_Product_fileName.lastIndexOf('.'));
@@ -75,17 +76,20 @@ public class DownloadZipCreator  implements Callable
     		}
     		in.close();
     		zos.closeEntry();
-    		//Compressione file legenda
-    		ZipEntry ze1= new ZipEntry("Legenda.png");
-    		
-    		zos.putNextEntry(ze1);
-    		InputStream in1 = getClass().getResourceAsStream(SAIMON_Legenda);
-    		
-    		int len1;
-    		while ((len1 = in1.read(buffer)) > 0) {
-    			zos.write(buffer, 0, len1);
+     		//Compressione file legenda (se tematico)
+   		
+    		if (SAIMON_Product_without_ext.contains(tematic)){
+        		ZipEntry ze1= new ZipEntry("Legenda.png");
+	    		
+	    		zos.putNextEntry(ze1);
+	    		InputStream in1 = getClass().getResourceAsStream(SAIMON_Legenda);
+	    		
+	    		int len1;
+	    		while ((len1 = in1.read(buffer)) > 0) {
+	    			zos.write(buffer, 0, len1);
+	    		}
+	    		in1.close();
     		}
-    		in1.close();
     		zos.closeEntry();
     		zos.close();
     		
