@@ -1,4 +1,6 @@
 FROM planetek/ubuntu-maven-git:base
+LABEL maintainer.name="ilias ioannou" \
+      maintainer.email="ioannou@planetek.gr"
 
 ARG branch
 
