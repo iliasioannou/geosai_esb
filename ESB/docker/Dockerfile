@@ -5,7 +5,7 @@ LABEL maintainer.name="ilias ioannou" \
 ARG branch
 
 WORKDIR /
-RUN git clone -b $branch https://teamEreticoTfs:vAsK*AIJFB@tfs.planetek.it/Planetek%20Hellas/pkh111_EOSAI/_git/pkh111_EOSAI_ESB /src
+RUN git clone -b $branch https://teamEreticoTfs:hIEMK-i=d@tfs.planetek.it/Planetek%20Hellas/pkh111_EOSAI/_git/pkh111_EOSAI_ESB /src
 
 WORKDIR src/ESB/water_quality
 RUN cp -r src/main/resources/legenda /legenda
