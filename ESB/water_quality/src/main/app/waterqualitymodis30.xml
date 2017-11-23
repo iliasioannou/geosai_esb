@@ -19,7 +19,7 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
                   &quot;date&quot;: &quot;Wed Jul 01 00:00:00 CEST 2015&quot;
               }
 }">
-        <http:listener config-ref="HTTP_Listener_WQ" path="/wqcmems30" doc:name="HTTP"/>
+        <http:listener config-ref="HTTP_Listener_WQ" path="/wqeosai30" doc:name="HTTP"/>
         <object-to-string-transformer doc:name="Object to String"/>
         <json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to HashMap"/>
         <set-variable variableName="inputPayload" value="#[payload]" doc:name="save inputPayload"/>
@@ -41,7 +41,7 @@ date = toFormat.format(date);]]></expression-component>
             <set-variable variableName="wqm30Map" value="#[new java.util.HashMap()]" doc:name="wqm30Map"/>
             <expression-component doc:name="Init wqm30Map"><![CDATA[wqm30Map.put("runDate", date);
 wqm30Map.put("procType", "month");
-wqm30Map.put("products", app.registry.wqProps["wqcmems.month.procType"]);
+wqm30Map.put("products", app.registry.wqProps["wqeosai.month.procType"]);
 ]]></expression-component>
 
                     <logger message="wqm30Map: #[wqm30Map]" level="INFO" doc:name="wqm30Map"/>
@@ -147,7 +147,7 @@ return payload;
             <set-variable variableName="Res" value="1km" doc:name="Res"/>
             <set-variable variableName="Res_Denominator" value="10000000" doc:name="Res_Denominator"/>
 
-            <set-variable variableName="Processing_Type" value="#[&quot;pkz029_CMEMS&quot; + (noextFileName.contains(&quot;P90&quot;) ? &quot;30P&quot; :&quot;30&quot;)]" doc:name="Processing_Type"/>
+            <set-variable variableName="Processing_Type" value="#[&quot;pkh111_EOSAI&quot; + (noextFileName.contains(&quot;P90&quot;) ? &quot;30P&quot; :&quot;30&quot;)]" doc:name="Processing_Type"/>
             <set-variable variableName="Publication_Date" value="#[ new java.text.SimpleDateFormat(&quot;yyyy-MM-dd'T'HH:mm:ss&quot;).format(new java.util.Date())]" doc:name="Publication_Date"/>
             <set-variable variableName="Creation_Date" value="#[Publication_Date]" doc:name="Creation_Date"/>
             <set-variable variableName="Temporal_Extent" value="#[new org.mule.el.datetime.DateTime(date, &quot;yyyy-MM-dd&quot;).format(&quot;yyyy-MM-dd'T'HH:mm:ss&quot;) ]" doc:name="Temporal_Extent"/>
