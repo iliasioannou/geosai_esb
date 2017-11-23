@@ -12,14 +12,14 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
-    <flow name="waterqualitycmems10Flow" doc:description="{
+    <flow name="waterqualityeosai10Flow" doc:description="{
     &quot;executionId&quot;: 123456,
     &quot;signalName&quot;: &quot;test_signal&quot;,
     &quot;args&quot;: {
                   &quot;date&quot;: &quot;Wed Jul 01 00:00:00 CEST 2015&quot;
               }
 }">
-        <http:listener config-ref="HTTP_Listener_WQ" path="/wqcmems10" doc:name="HTTP"/>
+        <http:listener config-ref="HTTP_Listener_WQ" path="/wqeosai10" doc:name="HTTP"/>
         <object-to-string-transformer doc:name="Object to String"/>
         <json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to HashMap"/>
         <set-variable variableName="inputPayload" value="#[payload]" doc:name="save inputPayload"/>
@@ -40,7 +40,7 @@ date = toFormat.format(date);]]></expression-component>
             <set-variable variableName="wqm10Map" value="#[new java.util.HashMap()]" doc:name="wqm10Map"/>
             <expression-component doc:name="Init wqm10Map"><![CDATA[wqm10Map.put("runDate", date);
 wqm10Map.put("procType", "ten");
-wqm10Map.put("products", app.registry.wqProps["wqcmems.ten.procType"]);
+wqm10Map.put("products", app.registry.wqProps["wqeosai.ten.procType"]);
 ]]></expression-component>
 
                     <logger message="wqm10Map: #[wqm10Map]" level="INFO" doc:name="wqm10Map"/>
@@ -146,7 +146,7 @@ return payload;
             <set-variable variableName="Res" value="1km" doc:name="Res"/>
             <set-variable variableName="Res_Denominator" value="10000000" doc:name="Res_Denominator"/>
 
-            <set-variable variableName="Processing_Type" value="pkz029_CMEMS" doc:name="Processing_Type"/>
+            <set-variable variableName="Processing_Type" value="pkh11_EOSAI" doc:name="Processing_Type"/>
             <set-variable variableName="Publication_Date" value="#[ new java.text.SimpleDateFormat(&quot;yyyy-MM-dd'T'HH:mm:ss&quot;).format(new java.util.Date())]" doc:name="Publication_Date"/>
             <set-variable variableName="Creation_Date" value="#[Publication_Date]" doc:name="Creation_Date"/>
             <set-variable variableName="Temporal_Extent" value="#[new org.mule.el.datetime.DateTime(date, &quot;yyyy-MM-dd&quot;).format(&quot;yyyy-MM-dd'T'HH:mm:ss&quot;) ]" doc:name="Temporal_Extent"/>
