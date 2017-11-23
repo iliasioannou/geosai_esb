@@ -59,7 +59,7 @@ result = proxy.execute(payload)]]></scripting:script>
                   &quot;lte&quot;: &quot;Fri Jan 01 00:00:00 CET 2016&quot;
               }
 }">
-		<http:listener config-ref="HTTP_Listener_WQ" path="/wqcmems" doc:name="HTTP"/>
+		<http:listener config-ref="HTTP_Listener_WQ" path="/wqeosai" doc:name="HTTP"/>
         <object-to-string-transformer doc:name="Object to String"/>
         <json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to HashMap"/>
         <set-variable variableName="inputPayload" value="#[payload]" doc:name="save inputPayload"/>
@@ -162,7 +162,7 @@ return payload;
             <set-variable variableName="Par_Type" value="#[new org.mule.module.json.JsonData('${wqmodis.partype}').get(noextFileName.split(&quot;_&quot;)[3]).asText()]" doc:name="Par_Type"/>
             <set-variable variableName="Res" value="#[Prod_Type.contains(&quot;Improved&quot;) ? &quot;&lt;100m&quot; : &quot;1km&quot;]" doc:name="Res"/>
             <set-variable variableName="Res_Denominator" value="#[Prod_Type.contains(&quot;Improved&quot;) ? 1000000 : 10000000]" doc:name="Res_Denominator"/>
-            <set-variable variableName="Processing_Type" value="pkz029_CMEMS" doc:name="Processing_Type"/>
+            <set-variable variableName="Processing_Type" value="pkz029_            <set-variable variableName="Processing_Type" vale="pkh111_EOSAI" doc:name="Processing_Type"/>" doc:name="Processing_Type"/>
             <set-variable variableName="Publication_Date" value="#[ new java.text.SimpleDateFormat(&quot;yyyy-MM-dd'T'HH:mm:ss&quot;).format(new java.util.Date())]" doc:name="Publication_Date"/>
             <set-variable variableName="Creation_Date" value="#[Publication_Date]" doc:name="Creation_Date"/>
             <set-variable variableName="Temporal_Extent" value="#[new org.mule.el.datetime.DateTime(noextFileName.split(&quot;_&quot;)[2], &quot;yyyyMMdd&quot;).format(&quot;yyyy-MM-dd'T'HH:mm:ss&quot;) ]" doc:name="Temporal_Extent"/>
