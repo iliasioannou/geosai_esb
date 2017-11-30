@@ -24,10 +24,10 @@
    <gmd:contact>
       <gmd:CI_ResponsibleParty>
          <gmd:individualName>
-            <gco:CharacterString>Giulio Ceriola</gco:CharacterString>
+            <gco:CharacterString>Ilias Ioannou</gco:CharacterString>
          </gmd:individualName>
          <gmd:organisationName>
-            <gco:CharacterString>Planetek Italia s.r.l.</gco:CharacterString>
+            <gco:CharacterString>Planetek Hellas s.r.l.</gco:CharacterString>
          </gmd:organisationName>
          <gmd:positionName gco:nilReason="missing">
             <gco:CharacterString/>
@@ -47,22 +47,22 @@
                <gmd:address>
                   <gmd:CI_Address>
                      <gmd:deliveryPoint>
-                        <gco:CharacterString>via Massaua, 12</gco:CharacterString>
+                        <gco:CharacterString>Kifisias Av., 44</gco:CharacterString>
                      </gmd:deliveryPoint>
                      <gmd:city>
-                        <gco:CharacterString>Bari</gco:CharacterString>
+                        <gco:CharacterString>Athens</gco:CharacterString>
                      </gmd:city>
                      <gmd:administrativeArea gco:nilReason="missing">
                         <gco:CharacterString/>
                      </gmd:administrativeArea>
                      <gmd:postalCode>
-                        <gco:CharacterString>70132</gco:CharacterString>
+                        <gco:CharacterString>11522</gco:CharacterString>
                      </gmd:postalCode>
                      <gmd:country>
                         <gco:CharacterString>Italy</gco:CharacterString>
                      </gmd:country>
                      <gmd:electronicMailAddress>
-                        <gco:CharacterString>ceriola@planetek.it</gco:CharacterString>
+                        <gco:CharacterString>ioannou@planetek.gr</gco:CharacterString>
                      </gmd:electronicMailAddress>
                   </gmd:CI_Address>
                </gmd:address>
@@ -146,29 +146,29 @@
          <gmd:pointOfContact>
             <gmd:CI_ResponsibleParty>
                <gmd:individualName>
-                  <gco:CharacterString>Giulio Ceriola</gco:CharacterString>
+                  <gco:CharacterString>Ilias Ioannou</gco:CharacterString>
                </gmd:individualName>
                <gmd:organisationName>
-                  <gco:CharacterString>Planetek Italia s.r.l.</gco:CharacterString>
+                  <gco:CharacterString>Planetek Hellas s.r.l.</gco:CharacterString>
                </gmd:organisationName>
                <gmd:contactInfo>
                   <gmd:CI_Contact>
                      <gmd:address>
                         <gmd:CI_Address>
                            <gmd:deliveryPoint>
-                              <gco:CharacterString>via Massaua, 12</gco:CharacterString>
+                              <gco:CharacterString>Kifisias Av., 44</gco:CharacterString>
                            </gmd:deliveryPoint>
                            <gmd:city>
-                              <gco:CharacterString>Bari</gco:CharacterString>
+                              <gco:CharacterString>Athens</gco:CharacterString>
                            </gmd:city>
                            <gmd:postalCode>
-                              <gco:CharacterString>70132</gco:CharacterString>
+                              <gco:CharacterString>11522</gco:CharacterString>
                            </gmd:postalCode>
                            <gmd:country>
-                              <gco:CharacterString>Italy</gco:CharacterString>
+                              <gco:CharacterString>Hellas</gco:CharacterString>
                            </gmd:country>
                            <gmd:electronicMailAddress>
-                              <gco:CharacterString>ceriola@planetek.it</gco:CharacterString>
+                              <gco:CharacterString>ioannou@planetek.gr</gco:CharacterString>
                            </gmd:electronicMailAddress>
                         </gmd:CI_Address>
                      </gmd:address>
