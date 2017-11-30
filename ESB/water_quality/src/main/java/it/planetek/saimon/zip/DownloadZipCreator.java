@@ -1,4 +1,4 @@
-package it.planetek.saimon.zip;
+package it.planetek.eosai.zip;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
