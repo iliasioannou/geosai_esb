@@ -28,14 +28,14 @@ public class DownloadZipCreator  implements Callable
 	private Properties wqProps;
 	
 	/**
-	* Compressione prodotti SAIMON
+	* Compressione prodotti EOSAI
 	* 
-	* @param SAIMON_Product		Path completo del file prodotto da compattare 
+	* @param EOSAI_Product		Path completo del file prodotto da compattare 
 	* @return output 			URL http di download del file
 	* @throws IOException 
 	* 
 	*/
-	public String zip(String SAIMON_Product) throws IOException
+	public String zip(String EOSAI_Product) throws IOException
 	{
 		byte[] buffer = new byte[1024];
     	String MD_ZipFileName="";
@@ -43,32 +43,32 @@ public class DownloadZipCreator  implements Callable
     	String WebFolder = wqProps.getProperty("download.webURL");
     	String tematic = "Thematic";
     	
-    	String SAIMON_Product_fileName = Paths.get(SAIMON_Product).getFileName().toString();
-    	String SAIMON_Product_without_ext = SAIMON_Product_fileName.substring(0, SAIMON_Product_fileName.lastIndexOf('.'));
+    	String EOSAI_Product_fileName = Paths.get(EOSAI_Product).getFileName().toString();
+    	String EOSAI_Product_without_ext = EOSAI_Product_fileName.substring(0, EOSAI_Product_fileName.lastIndexOf('.'));
     	
-    	String SAIMON_Legenda =  "/legenda/Legend_";
-    	if(SAIMON_Product_without_ext.contains("Chl")){
-    		SAIMON_Legenda += "CHL.png";
-    	}else if (SAIMON_Product_without_ext.contains("SST")) {
-    		SAIMON_Legenda += "SST.png";
-		}else if (SAIMON_Product_without_ext.contains("WT")) {
-			SAIMON_Legenda += "WT.png";
-		}else if (SAIMON_Product_without_ext.contains("Tur")) {
-			SAIMON_Legenda += "TUR.png";
+    	String EOSAI_Legenda =  "/legenda/Legend_";
+    	if(EOSAI_Product_without_ext.contains("Chl")){
+    		EOSAI_Legenda += "CHL.png";
+    	}else if (EOSAI_Product_without_ext.contains("SST")) {
+    		EOSAI_Legenda += "SST.png";
+		}else if (EOSAI_Product_without_ext.contains("WT")) {
+			EOSAI_Legenda += "WT.png";
+		}else if (EOSAI_Product_without_ext.contains("Tur")) {
+			EOSAI_Legenda += "TUR.png";
 		}
   	
-    	MD_ZipFileName = ZipFolder + SAIMON_Product_without_ext + ".zip"; 
+    	MD_ZipFileName = ZipFolder + EOSAI_Product_without_ext + ".zip"; 
     	
     	try {
-    		log.info("Product file: " + SAIMON_Product);
-    		log.info("Legenda file: " + SAIMON_Legenda);
+    		log.info("Product file: " + EOSAI_Product);
+    		log.info("Legenda file: " + EOSAI_Legenda);
     		log.info("Output zip file: " + MD_ZipFileName);
     		
     		FileOutputStream fos = new FileOutputStream(MD_ZipFileName);
     		ZipOutputStream zos = new ZipOutputStream(fos);
-    		ZipEntry ze= new ZipEntry(SAIMON_Product_fileName);
+    		ZipEntry ze= new ZipEntry(EOSAI_Product_fileName);
     		zos.putNextEntry(ze);
-    		FileInputStream in = new FileInputStream(SAIMON_Product);
+    		FileInputStream in = new FileInputStream(EOSAI_Product);
     		
     		int len;
     		while ((len = in.read(buffer)) > 0) {
@@ -78,11 +78,11 @@ public class DownloadZipCreator  implements Callable
     		zos.closeEntry();
      		//Compressione file legenda (se tematico)
    		
-    		if (SAIMON_Product_without_ext.contains(tematic)){
+    		if (EOSAI_Product_without_ext.contains(tematic)){
         		ZipEntry ze1= new ZipEntry("Legenda.png");
 	    		
 	    		zos.putNextEntry(ze1);
-	    		InputStream in1 = getClass().getResourceAsStream(SAIMON_Legenda);
+	    		InputStream in1 = getClass().getResourceAsStream(EOSAI_Legenda);
 	    		
 	    		int len1;
 	    		while ((len1 = in1.read(buffer)) > 0) {
@@ -98,7 +98,7 @@ public class DownloadZipCreator  implements Callable
     	   throw ex;
     	}
     	
-    	return WebFolder + SAIMON_Product_without_ext + ".zip";
+    	return WebFolder + EOSAI_Product_without_ext + ".zip";
 	}
 
 
@@ -107,9 +107,9 @@ public class DownloadZipCreator  implements Callable
 	{
 		wqProps = eventContext.getMuleContext().getRegistry().get("wqProps");
 
-		String SAIMON_Product = eventContext.getMessage().getProperty("wqModisOutLocalFullPath", PropertyScope.INVOCATION);
+		String EOSAI_Product = eventContext.getMessage().getProperty("wqModisOutLocalFullPath", PropertyScope.INVOCATION);
 		
-		return zip(SAIMON_Product);
+		return zip(EOSAI_Product);
 	}
 	
 	
