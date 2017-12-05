@@ -1,14 +1,12 @@
-FROM planetek/ubuntu-maven-git:base
+FROM dockerhub.planetek.it/pkh111_eosai_esb:base
 LABEL maintainer.name="ilias ioannou" \
       maintainer.email="ioannou@planetek.gr"
 
 ARG branch
+RUN git checkout $branch
+RUN git pull origin $branch
 
-WORKDIR /
-RUN git clone -b $branch https://teamEreticoTfs:hIEMK-i=d@tfs.planetek.it/Planetek%20Hellas/pkh111_EOSAI/_git/pkh111_EOSAI_ESB /src
-
-WORKDIR src/ESB/water_quality
-RUN cp -r src/main/resources/legenda /legenda
+WORKDIR water_quality
 RUN mvn clean install
 WORKDIR target
 RUN rm -r */
