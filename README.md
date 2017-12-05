@@ -13,3 +13,11 @@
     
     ./dev.sh
 
+
+# Launch in production mode
+
+- Build the final image
+  
+    ./build.sh
+
+
