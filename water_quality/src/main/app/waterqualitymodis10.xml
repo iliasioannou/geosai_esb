@@ -118,7 +118,7 @@ result = filter(lambda item: '.tif' in item, os.listdir(wqm10OutLocalDir))]]></s
             <set-variable variableName="workspaceName" value="${geoserver.workspace}" doc:name="workspaceName"/>
             <logger message="wqmodis10CreateDownload for #[fileName]" level="INFO" doc:name="wqmodis10CreateDownload "/>
             <set-variable variableName="wqModisOutLocalFullPath" value="#[wqm10OutLocalDir+fileName ]" doc:name="wqModisOutLocalFullPath"/>
-            <component class="it.planetek.saimon.zip.DownloadZipCreator" doc:name="DownloadZipCreator"/>
+            <component class="it.planetek.eosai.zip.DownloadZipCreator" doc:name="DownloadZipCreator"/>
             <set-variable variableName="Prod_Download" value="#[payload]" doc:name="Prod_Download"/>
             <logger message="Download Url: #[Prod_Download]" level="INFO" doc:name="Download Url"/>
             <choice doc:name="Numeric?">
