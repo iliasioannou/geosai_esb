@@ -25,7 +25,7 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
 	</spring:beans>
 	
     <http:listener-config name="HTTP_Listener_WQ" host="0.0.0.0" port="9190" doc:name="HTTP Listener Configuration"/>
-    <http:request-config name="HTTP_Request_Activiti" host="${activiti.host}" port="${activiti.port}" basePath="${activiti.path}" doc:name="HTTP Request Configuration" responseTimeout="60000">
+    <http:request-config name="HTTP_Request_Activiti" host="${activiti.host}" port="${activiti.port}" basePath="${activiti.path}" doc:name="HTTP Request Configuration"  responseTimeout="180000">
     	<http:basic-authentication username="${activiti.usr}" password="${activiti.pwd}" />
     </http:request-config>
     <sub-flow name="processingFlow">
@@ -169,7 +169,7 @@ return payload;
             <logger message="Temp_Extent: #[Temporal_Extent] from #[noextFileName.split(&quot;_&quot;)[0]]" level="INFO" doc:name="Temp_Extent"/>
             <set-variable variableName="geoserverPublic" value="${geoserver.public}" doc:name="geoserverPublic"/>
             <logger message="workspaces/#[workspaceName]/coveragestores/#[coverageName]/coverages/#[coverageName].json" level="INFO" doc:name="Copy_of_Call geonetwork flow"/>
-            <http:request config-ref="HTTP_Geoserver_Request" path="workspaces/#[workspaceName]/coveragestores/#[coverageName]/coverages/#[coverageName].json" method="GET" doc:name="Req Bbox from Geoserver "/>
+            <http:request config-ref="HTTP_Geoserver_Request" path="workspaces/#[workspaceName]/coveragestores/#[coverageName]/coverages/#[coverageName].json" method="GET" doc:name="Req Bbox from Geoserver"  responseTimeout="180000"/>
             <object-to-string-transformer doc:name="Object to String"/>
             <json:object-to-json-transformer doc:name="Object to JSON"/>
             <set-variable variableName="Extent_West" value="#[json:coverage/latLonBoundingBox/minx]" doc:name="Extent_West"/>
