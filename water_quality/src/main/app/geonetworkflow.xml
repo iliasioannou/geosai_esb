@@ -36,7 +36,9 @@ return payload;]]></expression-component>
         <message-properties-transformer doc:name="Add Content-Type Header" >
             <add-message-property key="content-type" value="application/x-www-form-urlencoded"/>
         </message-properties-transformer>
+        <!--
         <logger message="Payload to call Geonetw: #[payload]" level="INFO" doc:name="Logger"/>
+        -->
         <logger message="Before request to Geonetwork" level="INFO" doc:name="Logger"/>
         <http:request config-ref="HTTP_Geonetwork_Request" path="md.insert" method="POST" doc:name="Insert metadata into Geonetwork">
         </http:request>
