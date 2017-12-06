@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:spring="http://www.springframework.org/schema/beans" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+        xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+        xmlns:spring="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
 
-	<http:request-config name="HTTP_Geonetwork_Request" host="${geonetwork.host}" port="${geonetwork.port}" basePath="${geonetwork.basepath}" doc:name="HTTP Request Configuration">
+        <http:request-config name="HTTP_Geonetwork_Request" host="${geonetwork.host}" port="${geonetwork.port}" basePath="${geonetwork.basepath}" doc:name="HTTP Request Configuration" responseTimeout="60000">
         <http:basic-authentication username="${geonetwork.usr}" password="${geonetwork.pwd}" preemptive="true"/>
     </http:request-config>
 
 <flow name="geonetworkFlow" doc:description="{
-	&quot;type&quot;: &quot;alert&quot;,
-	&quot;metadataXml&quot;: &quot;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;gmd:MD_Metadata ...  &lt;/gmd:MD_Metadata&gt;&quot;
+        &quot;type&quot;: &quot;alert&quot;,
+        &quot;metadataXml&quot;: &quot;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;gmd:MD_Metadata ...  &lt;/gmd:MD_Metadata&gt;&quot;
 }
 
 - &quot;type&quot; is one of [alert, modis, modistwq, sen2, crowdsrc] (see group/category in properties file)
@@ -27,17 +27,20 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
         <set-variable variableName="groupid" value="#[app.registry.wqProps[&quot;geonetwork.groupid.&quot;+type]]" doc:name="groupid"/>
         <set-variable variableName="categoryid" value="#[app.registry.wqProps[&quot;geonetwork.categoryid.&quot;+type]]" doc:name="categoryid"/>
         <expression-component doc:name="Set Payload request form body"><![CDATA[payload = new java.util.HashMap();
-payload.put("data", flowVars.metadataXml);
-payload.put("group", flowVars.groupid);
-payload.put("category", flowVars.categoryid);
+payload.put("data", metadataXml);
+payload.put("group", groupid);
+payload.put("category", categoryid);
 payload.put("uuidAction","generateUUID");
 payload.put("styleSheet","");
 return payload;]]></expression-component>
         <message-properties-transformer doc:name="Add Content-Type Header" >
             <add-message-property key="content-type" value="application/x-www-form-urlencoded"/>
         </message-properties-transformer>
+        <logger message="Payload to call Geonetw: #[payload]" level="INFO" doc:name="Logger"/>
+        <logger message="Before request to Geonetwork" level="INFO" doc:name="Logger"/>
         <http:request config-ref="HTTP_Geonetwork_Request" path="md.insert" method="POST" doc:name="Insert metadata into Geonetwork">
         </http:request>
+        <logger message="After request to Geonetwork" level="INFO" doc:name="Logger"/>
         <object-to-string-transformer doc:name="Object to String"/>
         <logger message="Geonetwork response: [#[message.inboundProperties[&quot;http.status&quot;]]] #[payload]" level="INFO" doc:name="Geonetwork response"/>
     </flow>
