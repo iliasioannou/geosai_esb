@@ -8,7 +8,7 @@
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
 
-        <http:request-config name="HTTP_Geonetwork_Request" host="${geonetwork.host}" port="${geonetwork.port}" basePath="${geonetwork.basepath}" doc:name="HTTP Request Configuration" responseTimeout="60000">
+        <http:request-config name="HTTP_Geonetwork_Request" host="${geonetwork.host}" port="${geonetwork.port}" basePath="${geonetwork.basepath}" doc:name="HTTP Request Configuration" responseTimeout="180000">
         <http:basic-authentication username="${geonetwork.usr}" password="${geonetwork.pwd}" preemptive="true"/>
     </http:request-config>
 
