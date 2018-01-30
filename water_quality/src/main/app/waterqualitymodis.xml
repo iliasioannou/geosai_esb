@@ -132,7 +132,8 @@ payload.put("vars", vars);
 result = filter(lambda x: os.path.isdir(os.path.join(wqModisOutLocalDir, x)), os.listdir(wqModisOutLocalDir))]]></scripting:script>
         </scripting:component>
         <foreach doc:name="For Each">
-            <set-variable variableName="fullDirName" value="#[wqModisOutLocalDir + payload + &quot;/&quot;]" doc:name="fullDirName"/>
+            <set-variable variableName="dirName" value="#[payload]" doc:name="dirName"/>
+            <set-variable variableName="fullDirName" value="#[wqModisOutLocalDir + dirName + &quot;/&quot;]" doc:name="fullDirName"/>
             <scripting:component doc:name="Get last prediction file">
                 <scripting:script engine="jython"><![CDATA[import os
 result = max(os.listdir(fullDirName))]]></scripting:script>
@@ -146,7 +147,7 @@ result = max(os.listdir(fullDirName))]]></scripting:script>
             <logger message="Load file in Geoserver: #[fileName]" level="INFO" doc:name="Load file in Geoserver"/>
             <expression-component doc:name="Set payload geoserverReq HashMap"><![CDATA[payload = new java.util.HashMap();
 payload.put("coveragestoreName", coverageName );
-payload.put("url", "file://"+wqModisOutLocalFullPath );
+payload.put("url", "file://"+ "/opt/geoserver/data_dir/eosai/raster/" + dirName + "/" + fileName );
 payload.put("workspaceName", workspaceName);
 return payload;
 ]]></expression-component>
