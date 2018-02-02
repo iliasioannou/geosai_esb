@@ -132,26 +132,30 @@ payload.put("vars", vars);
 result = filter(lambda x: os.path.isdir(os.path.join(wqModisOutLocalDir, x)), os.listdir(wqModisOutLocalDir))]]></scripting:script>
         </scripting:component>
         <foreach doc:name="For Each">
-            <set-variable variableName="fullDirName" value="#[wqModisOutLocalDir + payload + &quot;/&quot;]" doc:name="fullDirName"/>
-            <scripting:component doc:name="Get last prediction file">
-                <scripting:script engine="jython"><![CDATA[import os
-result = max(os.listdir(fullDirName))]]></scripting:script>
+            <set-variable variableName="dirName" value="#[payload]" doc:name="dirName"/>
+            <set-variable variableName="fullDirName" value="#[wqModisOutLocalDir + dirName + &quot;/&quot;]" doc:name="fullDirName"/>
+            <scripting:component doc:name="Get last 4 prediction files">
+                <scripting:script engine="jython"><![CDATA[import os, heapq
+# result = max(os.listdir(fullDirName))
+result = heapq.nlargest(4, os.listdir(fullDirName))]]></scripting:script>
             </scripting:component>
-            <set-variable variableName="fileName" value="#[payload]" doc:name="fileName"/>
-            <set-variable variableName="noextFileName" value="#[fileName.substring( 0, fileName.lastIndexOf(&quot;.&quot;) )]" doc:name="noextFileName"/>
-            <set-variable variableName="coverageName" value="#[noextFileName.split(&quot;_&quot;)[0].toUpperCase()]" doc:name="coverageName"/>
-            <set-variable variableName="workspaceName" value="${geoserver.workspace}" doc:name="workspaceName"/>
-            <logger message="wqmodisCreateDownload for #[fileName]" level="INFO" doc:name="wqmodisCreateDownload "/>
-            <set-variable variableName="wqModisOutLocalFullPath" value="#[fullDirName + fileName]" doc:name="wqModisOutLocalFullPath"/>
-            <logger message="Load file in Geoserver: #[fileName]" level="INFO" doc:name="Load file in Geoserver"/>
-            <expression-component doc:name="Set payload geoserverReq HashMap"><![CDATA[payload = new java.util.HashMap();
+            <foreach doc:name="For Each">
+                <set-variable variableName="fileName" value="#[payload]" doc:name="fileName"/>
+                <set-variable variableName="noextFileName" value="#[fileName.substring( 0, fileName.lastIndexOf(&quot;.&quot;) )]" doc:name="noextFileName"/>
+                <set-variable variableName="coverageName" value="#[noextFileName.split(&quot;_&quot;)[0].toUpperCase()]" doc:name="coverageName"/>
+                <set-variable variableName="workspaceName" value="${geoserver.workspace}" doc:name="workspaceName"/>
+                <logger message="wqmodisCreateDownload for #[fileName]" level="INFO" doc:name="wqmodisCreateDownload "/>
+                <set-variable variableName="wqModisOutLocalFullPath" value="#[fullDirName + fileName]" doc:name="wqModisOutLocalFullPath"/>
+                <logger message="Load file in Geoserver: #[fileName]" level="INFO" doc:name="Load file in Geoserver"/>
+                <expression-component doc:name="Set payload geoserverReq HashMap"><![CDATA[payload = new java.util.HashMap();
 payload.put("coveragestoreName", coverageName );
-payload.put("url", "file://"+wqModisOutLocalFullPath );
+payload.put("url", "file://"+ "/opt/geoserver/data_dir/eosai/raster/" + dirName + "/" + fileName );
 payload.put("workspaceName", workspaceName);
 return payload;
 ]]></expression-component>
-            <logger message="Call Geoserver flow with #[payload]" level="INFO" doc:name="Call Geoserver flow"/>
-            <flow-ref name="geoserverImageMosaicFlow" doc:name="geoserverImageMosaicFlow"/>
+                <logger message="Call Geoserver flow with #[payload]" level="INFO" doc:name="Call Geoserver flow"/>
+                <flow-ref name="geoserverImageMosaicFlow" doc:name="geoserverImageMosaicFlow"/>
+            </foreach>
         </foreach>
     </flow>
 
