@@ -47,14 +47,16 @@ public class DownloadZipCreator  implements Callable
     	String EOSAI_Product_without_ext = EOSAI_Product_fileName.substring(0, EOSAI_Product_fileName.lastIndexOf('.'));
     	
     	String EOSAI_Legenda =  "/legenda/Legend_";
-    	if(EOSAI_Product_without_ext.contains("Chl")){
-    		EOSAI_Legenda += "CHL.png";
-    	}else if (EOSAI_Product_without_ext.contains("SST")) {
-    		EOSAI_Legenda += "SST.png";
-		}else if (EOSAI_Product_without_ext.contains("WT")) {
-			EOSAI_Legenda += "WT.png";
-		}else if (EOSAI_Product_without_ext.contains("Tur")) {
-			EOSAI_Legenda += "TUR.png";
+    	if(EOSAI_Product_without_ext.contains("DOX")){
+    		EOSAI_Legenda += "DOX.png";
+    	}else if (EOSAI_Product_without_ext.contains("CUR")) {
+    		EOSAI_Legenda += "CUR.png";
+		}else if (EOSAI_Product_without_ext.contains("SAL")) {
+			EOSAI_Legenda += "SAL.png";
+		}else if (EOSAI_Product_without_ext.contains("SWH")) {
+			EOSAI_Legenda += "SWH.png";
+		}else if (EOSAI_Product_without_ext.contains("TEM")) {
+			EOSAI_Legenda += "TEM.png";
 		}
   	
     	MD_ZipFileName = ZipFolder + EOSAI_Product_without_ext + ".zip"; 
